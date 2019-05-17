@@ -1,0 +1,9 @@
+img_size = 32
+channel = 3
+batch_size = 128
+num_classes = 100
+epochs = 200
+patience = 10
+model_name = 'resnet50'
+visible_gpu = '3'
+lr = 0.1
