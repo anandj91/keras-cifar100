@@ -1,9 +1,5 @@
-import os
-import tensorflow as tf
-import numpy as np
-from tensorflow.keras import layers
-from tensorflow.keras import Model
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.python.keras import layers
+from tensorflow.python.keras import Model
 
 import sys
 sys.path.append("..")
@@ -109,8 +105,9 @@ def conv_block(input_tensor,
 
 
 def resnet(num_block,
+           input_shape=(img_size, img_size, channel),
            classes=100):
-    main_input = layers.Input((img_size, img_size, channel), name='resnet_input')
+    main_input = layers.Input(input_shape, name='resnet_input')
    
     x = layers.Conv2D(64, (3, 3),
                       padding='same',
