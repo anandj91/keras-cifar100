@@ -79,3 +79,18 @@ def find_lr(epoch_idx, cur_lr):
     else:
         return 0.0008
 
+
+def get_best_checkpoint(dir_name):
+    cpt_path = os.path.join('experiments', dir_name, 'checkpoints')
+    if os.path.exists(cpt_path):
+        all_cpt = os.listdir(cpt_path)
+        if len(all_cpt) > 0:
+            best_val_loss = 100
+            best_idx = 0
+            for idx, cpt in enumerate(all_cpt):
+                val_loss = cpt[-11: -5]
+                if float(val_loss) < best_val_loss:
+                    best_val_loss = float(val_loss)
+                    best_idx = idx
+            return all_cpt[best_idx]
+    return None
