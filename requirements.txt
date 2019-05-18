@@ -1,2 +1,4 @@
 tensorflow-gpu
 scipy
+graphviz
+pydot

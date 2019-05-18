@@ -48,17 +48,17 @@ if __name__ == "__main__":
     callbacks = [model_checkpoint, tensor_board]
     if args.early_stop:
         early_stop = EarlyStopping('val_loss', patience=patience)
-        callbacks += early_stop
+        callbacks.append(early_stop)
     if args.checkpoint is not None:
         model = load_model(os.path.join('experiments', args.model, 'checkpoints', args.checkpoint))
         reduce_lr = ReduceLROnPlateau('val_loss', factor=0.5, patience=int(patience / 2), verbose=1)
-        callbacks += reduce_lr
+        callbacks.append(reduce_lr)
     if args.continue_train:
         cpt = get_best_checkpoint(args.model)
         if cpt:
             model = load_model(os.path.join('experiments', args.model, 'checkpoints', cpt))
             reduce_lr = ReduceLROnPlateau('val_loss', factor=0.5, patience=int(patience / 2), verbose=1)
-            callbacks += reduce_lr
+            callbacks.append(reduce_lr)
 
     cifar_gen, cifar_test_gen = get_cifar_gen()
     model.fit_generator(cifar_gen,
