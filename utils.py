@@ -79,8 +79,8 @@ def get_model(train_model):
 
 
 def find_lr(epoch_idx, cur_lr):
-    if epoch_idx == 1:  # warm up
-        return cur_lr / epochs
+    if epoch_idx <= 1:  # warm up
+        return min(cur_lr / epochs, cur_lr)
     if epoch_idx < 60:
         return min(0.1, cur_lr)
     elif epoch_idx < 120:
