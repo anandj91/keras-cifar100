@@ -73,7 +73,7 @@ if __name__ == "__main__":
             model.compile(optimizer=optimizer, metrics=['accuracy'],
                           loss='categorical_crossentropy')
             reduce_lr = ReduceLROnPlateau('val_loss', factor=0.5, patience=int(patience / 2), verbose=1)
-            callbacks.append(reduce_lr)
+            callbacks = [model_checkpoint, tensor_board, reduce_lr]
 
     cifar_gen, cifar_test_gen = get_cifar_gen()
     model.fit_generator(cifar_gen,

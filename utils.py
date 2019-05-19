@@ -79,16 +79,16 @@ def get_model(train_model):
 
 
 def find_lr(epoch_idx, cur_lr):
-    if epoch_idx <= 1:  # warm up
-        return min(cur_lr / epochs, cur_lr)
+    if epoch_idx < 1:  # warm up
+        return cur_lr / epochs
     if epoch_idx < 60:
-        return min(0.1, cur_lr)
+        return 0.1
     elif epoch_idx < 120:
-        return min(0.02, cur_lr)
+        return 0.02
     elif epoch_idx < 160:
-        return min(0.004, cur_lr)
+        return 0.004
     else:
-        return min(0.0008, cur_lr)
+        return 0.0008
 
 
 def get_best_checkpoint(dir_name):
