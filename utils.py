@@ -71,13 +71,13 @@ def get_model(model_name):
 
 def find_lr(epoch_idx, cur_lr):
     if epoch_idx < 60:
-        return 0.1
+        return min(0.1, cur_lr)
     elif epoch_idx < 120:
-        return 0.02
+        return min(0.02, cur_lr)
     elif epoch_idx < 160:
-        return 0.004
+        return min(0.004, cur_lr)
     else:
-        return 0.0008
+        return min(0.0008, cur_lr)
 
 
 def get_best_checkpoint(dir_name):

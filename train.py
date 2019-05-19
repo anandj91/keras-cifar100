@@ -1,4 +1,5 @@
 import os
+import time
 import argparse
 
 from tensorflow.python.keras.models import load_model
@@ -39,17 +40,24 @@ if __name__ == "__main__":
                                        verbose=1, save_best_only=True, 
                                        save_weights_only=False)
     lr_scheduler = LearningRateScheduler(find_lr, verbose=1)
-    tensor_board = TensorBoard(log_dir=os.path.join('experiments', args.model, 'logs'),
+    cur_time = '-'.join(time.ctime().split(' '))
+    tb_dir = os.path.join('experiments', args.model, 'logs', cur_time)
+    os.makedirs(tb_dir)
+    tensor_board = TensorBoard(log_dir=tb_dir,
                                histogram_freq=0, write_graph=True, write_images=True)
 
-    optimizer = SGD(lr=args.lr, momentum=0.9, decay=1e-4, nesterov=True)
+    callbacks = [model_checkpoint, tensor_board, lr_scheduler]
+
+    # opyimizer
+    optimizer = SGD(lr=args.lr, momentum=0.9, decay=5e-4, nesterov=True)
     model.compile(optimizer=optimizer, metrics=['accuracy'],
                   loss='categorical_crossentropy')
-    callbacks = [model_checkpoint, tensor_board]
+
+    # more options about lr
     if args.early_stop:
         early_stop = EarlyStopping('val_loss', patience=patience)
         callbacks.append(early_stop)
-    if args.checkpoint is not None:
+    if args.checkpoint is not None:  # train from a checkpoint
         model = load_model(os.path.join('experiments', args.model, 'checkpoints', args.checkpoint))
         reduce_lr = ReduceLROnPlateau('val_loss', factor=0.5, patience=int(patience / 2), verbose=1)
         callbacks.append(reduce_lr)
@@ -57,6 +65,9 @@ if __name__ == "__main__":
         cpt = get_best_checkpoint(args.model)
         if cpt:
             model = load_model(os.path.join('experiments', args.model, 'checkpoints', cpt))
+            optimizer = SGD(lr=1e-3, momentum=0.9, decay=5e-4, nesterov=True)
+            model.compile(optimizer=optimizer, metrics=['accuracy'],
+                          loss='categorical_crossentropy')
             reduce_lr = ReduceLROnPlateau('val_loss', factor=0.5, patience=int(patience / 2), verbose=1)
             callbacks.append(reduce_lr)
 
