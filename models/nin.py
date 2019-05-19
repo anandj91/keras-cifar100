@@ -18,7 +18,7 @@ def nin_block(input_tensor, kernel_size, filters, strides=(1, 1), single=False):
     return x
 
 
-def nin_model(input_shape, classes=100, single=False):
+def nin(input_shape=(img_size, img_size, channel), classes=100, single=False):
     main_input = layers.Input(input_shape)
     x = nin_block(main_input, (3, 3), 64, single=single)
     x = layers.MaxPooling2D()(x)
@@ -34,5 +34,5 @@ def nin_model(input_shape, classes=100, single=False):
 
 
 if __name__ == '__main__':
-    model = nin_model((img_size, img_size, channel))
+    model = nin((img_size, img_size, channel))
     model.summary()

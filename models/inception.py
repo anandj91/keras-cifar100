@@ -41,7 +41,7 @@ def inception_model(input_tensor,
     return inception_output
 
 
-def googlenet_model(input_shape, classes=100):
+def googlenet(input_shape=(img_size, img_size, channel), classes=100):
     main_input = layers.Input(input_shape)
 
     x = layers.Conv2D(192, (3, 3), padding='same')(main_input)
@@ -70,5 +70,5 @@ def googlenet_model(input_shape, classes=100):
 
 
 if __name__ == '__main__':
-    model = googlenet_model((img_size, img_size, channel))
+    model = googlenet((img_size, img_size, channel))
     model.summary()

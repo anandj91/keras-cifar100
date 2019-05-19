@@ -1,10 +1,13 @@
 import os
 import tensorflow as tf
 import numpy as np
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
 from params import *
 from models.resnet import resnet50, resnet101, resnet152
+from models.vgg import vgg
+from models.nin import nin
+from models.inception import googlenet
 
 
 def get_mean_std(images):
@@ -60,16 +63,24 @@ def get_cifar_gen():
     return cifar_gen, cifar_test_gen
 
 
-def get_model(model_name):
-    if model_name == 'resnet50':
+def get_model(train_model):
+    if train_model == 'resnet50':
         return resnet50()
-    elif model_name == 'resnet101':
+    elif train_model == 'resnet101':
         return resnet101()
-    elif model_name == 'resnet152':
+    elif train_model == 'resnet152':
         return resnet152()
+    elif train_model == 'vgg':
+        return vgg()
+    elif train_model == 'nin':
+        return nin()
+    elif train_model == 'goolenet':
+        return googlenet()
 
 
 def find_lr(epoch_idx, cur_lr):
+    if epoch_idx == 1:  # warm up
+        return cur_lr / epochs
     if epoch_idx < 60:
         return min(0.1, cur_lr)
     elif epoch_idx < 120:

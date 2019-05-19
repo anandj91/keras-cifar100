@@ -157,7 +157,7 @@ def resnet101():
 
 
 def resnet152():
-    return resnet([3, 4, 36, 3])
+    return resnet([3, 8, 36, 3])
 
 
 if __name__ == "__main__":

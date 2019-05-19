@@ -6,7 +6,7 @@ sys.path.append("..")
 from params import *
 
 
-def get_vgg(input_shape=(img_size, img_size, channel)):
+def vgg(input_shape=(img_size, img_size, channel)):
     main_input = layers.Input(input_shape, name='vgg16_bn')
 
     x = layers.Conv2D(64, (3, 3),
@@ -76,5 +76,5 @@ def get_vgg(input_shape=(img_size, img_size, channel)):
 
 
 if __name__ == '__main__':
-    model = get_vgg()
+    model = vgg()
     model.summary()

@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
     callbacks = [model_checkpoint, tensor_board, lr_scheduler]
 
-    # opyimizer
+    # optimizer
     optimizer = SGD(lr=args.lr, momentum=0.9, decay=5e-4, nesterov=True)
     model.compile(optimizer=optimizer, metrics=['accuracy'],
                   loss='categorical_crossentropy')
