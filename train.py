@@ -65,7 +65,11 @@ if __name__ == "__main__":
         cpt = get_best_checkpoint(args.model)
         if cpt:
             model = load_model(os.path.join('experiments', args.model, 'checkpoints', cpt))
-            optimizer = SGD(lr=1e-3, momentum=0.9, decay=5e-4, nesterov=True)
+            if lr != args.lr:
+                cur_lr = args.lr
+            else:
+                cur_lr = 1e-4
+            optimizer = SGD(lr=cur_lr, momentum=0.9, decay=5e-4, nesterov=True)
             model.compile(optimizer=optimizer, metrics=['accuracy'],
                           loss='categorical_crossentropy')
             reduce_lr = ReduceLROnPlateau('val_loss', factor=0.5, patience=int(patience / 2), verbose=1)
