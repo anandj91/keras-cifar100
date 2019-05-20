@@ -27,12 +27,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
-    model = get_model(args.model)
-    plot_model(model, to_file=os.path.join('experiments', args.model, args.model + '.png'), show_shapes=True)
 
     if not os.path.exists('experiments/' + args.model):
         os.makedirs(os.path.join('experiments', args.model, 'logs'))
         os.makedirs(os.path.join('experiments', args.model, 'checkpoints'))
+
+    model = get_model(args.model)
+    plot_model(model, to_file=os.path.join('experiments', args.model, args.model + '.png'), show_shapes=True)
 
     # callbacks
     model_names = os.path.join('experiments', args.model, 'checkpoints', 'model.{epoch:03d}-{val_loss:.4f}.hdf5')
