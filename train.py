@@ -4,7 +4,7 @@ import argparse
 
 from tensorflow.python.keras.models import load_model
 from tensorflow.python.keras.utils import plot_model
-from tensorflow.python.keras.optimizers import SGD
+from tensorflow.python.keras.optimizers import SGD, Adam
 from tensorflow.python.keras.callbacks import ModelCheckpoint, \
     TensorBoard, LearningRateScheduler, EarlyStopping, ReduceLROnPlateau
 
@@ -24,6 +24,7 @@ if __name__ == "__main__":
     parser.add_argument('--checkpoint', type=str, help='train from a previous model', default=None)
     parser.add_argument('--early_stop', type=bool, help='apply early stop', default=False)
     parser.add_argument('--continue_train', type=bool, help='continue train from previous best', default=False)
+    parser.add_argument('--optimizer', type=str, help='choose optimizer', default='sgd')
     args = parser.parse_args()
 
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
@@ -50,7 +51,10 @@ if __name__ == "__main__":
     callbacks = [model_checkpoint, tensor_board, lr_scheduler]
 
     # optimizer
-    optimizer = SGD(lr=args.lr, momentum=0.9, decay=5e-4, nesterov=True)
+    if args.optimizer == 'sgd':
+        optimizer = SGD(lr=args.lr, momentum=0.9, decay=5e-4, nesterov=True)
+    elif args.optimizer == 'adam':
+        optimizer = Adam(lr=args.lr)
     model.compile(optimizer=optimizer, metrics=['accuracy'],
                   loss='categorical_crossentropy')
 
@@ -70,7 +74,10 @@ if __name__ == "__main__":
                 cur_lr = args.lr
             else:
                 cur_lr = 1e-4
-            optimizer = SGD(lr=cur_lr, momentum=0.9, decay=5e-4, nesterov=True)
+            if args.optimizer == 'sgd':
+                optimizer = SGD(lr=cur_lr, momentum=0.9, decay=5e-4, nesterov=True)
+            elif args.optimizer == 'adam':
+                optimizer = Adam(lr=cur_lr)
             model.compile(optimizer=optimizer, metrics=['accuracy'],
                           loss='categorical_crossentropy')
             reduce_lr = ReduceLROnPlateau('val_loss', factor=0.5, patience=int(patience / 2), verbose=1)
