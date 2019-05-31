@@ -29,7 +29,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print('####################################')
-    print(cur_time)
+    print(time.ctime())
     print('hyper param selection')
     print('model name:', args.model)
     print('batch size:', args.batch_size)
