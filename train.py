@@ -14,6 +14,7 @@ from params import *
 
 
 if __name__ == "__main__":
+    cur_time = '-'.join(time.ctime().split(' ')[: 3])
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, help='model name', default=model_name)
@@ -27,6 +28,16 @@ if __name__ == "__main__":
     parser.add_argument('--optimizer', type=str, help='choose optimizer', default='sgd')
     args = parser.parse_args()
 
+    print('####################################')
+    print(cur_time)
+    print('hyper param selection')
+    print('model name:', args.model)
+    print('batch size:', args.batch_size)
+    print('epoch num: ', args.epochs)
+    print('initial lr:', args.lr)
+    print('optimizer: ', args.optimizer)
+    print('####################################')
+
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
     if not os.path.exists('experiments/' + args.model):
@@ -37,12 +48,15 @@ if __name__ == "__main__":
     plot_model(model, to_file=os.path.join('experiments', args.model, args.model + '.png'), show_shapes=True)
 
     # callbacks
-    model_names = os.path.join('experiments', args.model, 'checkpoints', 'model.{epoch:03d}-{val_loss:.4f}.hdf5')
+    # checkpoint callback
+    model_names = os.path.join('experiments', args.model, 'checkpoints',
+                               cur_time + '.model.{epoch:03d}-{val_loss:.4f}.hdf5')
     model_checkpoint = ModelCheckpoint(model_names, monitor='val_loss', mode='min',
                                        verbose=1, save_best_only=True, 
                                        save_weights_only=False)
+    # lr callback
     lr_scheduler = LearningRateScheduler(find_lr, verbose=1)
-    cur_time = '-'.join(time.ctime().split(' '))
+    # tensor board callback
     tb_dir = os.path.join('experiments', args.model, 'logs', cur_time)
     os.makedirs(tb_dir)
     tensor_board = TensorBoard(log_dir=tb_dir,
@@ -53,7 +67,7 @@ if __name__ == "__main__":
     # optimizer
     if args.optimizer == 'sgd':
         optimizer = SGD(lr=args.lr, momentum=0.9, decay=5e-4, nesterov=True)
-    elif args.optimizer == 'adam':
+    else:
         optimizer = Adam(lr=args.lr)
     model.compile(optimizer=optimizer, metrics=['accuracy'],
                   loss='categorical_crossentropy')
@@ -76,7 +90,7 @@ if __name__ == "__main__":
                 cur_lr = 1e-4
             if args.optimizer == 'sgd':
                 optimizer = SGD(lr=cur_lr, momentum=0.9, decay=5e-4, nesterov=True)
-            elif args.optimizer == 'adam':
+            else:
                 optimizer = Adam(lr=cur_lr)
             model.compile(optimizer=optimizer, metrics=['accuracy'],
                           loss='categorical_crossentropy')
