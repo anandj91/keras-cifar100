@@ -14,7 +14,7 @@ from params import *
 
 
 if __name__ == "__main__":
-    cur_time = '-'.join(time.ctime().split(' ')[: 3])
+    cur_time = '-'.join(time.ctime().split(' ')).replace(':', '-')
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, help='model name', default=model_name)
