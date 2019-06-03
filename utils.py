@@ -1,11 +1,12 @@
 import os
 import tensorflow as tf
 import numpy as np
+import matplotlib.pyplot as plt
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
 from params import *
 from models.resnet import resnet50, resnet101, resnet152
-from models.vgg import vgg
+from models.vgg import vgg11, vgg13, vgg16, vgg19
 from models.nin import nin
 from models.inception import googlenet
 
@@ -70,8 +71,14 @@ def get_model(train_model):
         return resnet101()
     elif train_model == 'resnet152':
         return resnet152()
-    elif train_model == 'vgg':
-        return vgg()
+    elif train_model == 'vgg11':
+        return vgg11()
+    elif train_model == 'vgg13':
+        return vgg13()
+    elif train_model == 'vgg16':
+        return vgg16()
+    elif train_model == 'vgg19':
+        return vgg19()
     elif train_model == 'nin':
         return nin()
     elif train_model == 'goolenet':
@@ -105,3 +112,20 @@ def get_best_checkpoint(dir_name):
                     best_idx = idx
             return all_cpt[best_idx]
     return None
+
+
+def save_train_images(history, save_path):
+    # plot loss and acc
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.xlabel('epoch')
+    plt.ylabel('Loss value')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.imsave(os.path.join(save_path, 'loss.png'))
+
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
+    plt.xlabel('epoch')
+    plt.ylabel('acc value')
+    plt.legend(['train', 'test'], loc='upper left')
+    plt.imsave(os.path.join(save_path, 'acc.png'))

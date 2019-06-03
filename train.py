@@ -6,10 +6,10 @@ from tensorflow.python.keras.models import load_model
 from tensorflow.python.keras.utils import plot_model
 from tensorflow.python.keras.optimizers import SGD, Adam
 from tensorflow.python.keras.callbacks import ModelCheckpoint, \
-    TensorBoard, LearningRateScheduler, EarlyStopping, ReduceLROnPlateau
+    TensorBoard, LearningRateScheduler, EarlyStopping, ReduceLROnPlateau, CSVLogger
 
 
-from utils import get_model, get_cifar_gen, find_lr, get_best_checkpoint
+from utils import get_model, get_cifar_gen, find_lr, get_best_checkpoint, save_train_images
 from params import *
 
 
@@ -61,8 +61,9 @@ if __name__ == "__main__":
     os.makedirs(tb_dir)
     tensor_board = TensorBoard(log_dir=tb_dir,
                                histogram_freq=0, write_graph=True, write_images=True)
+    csv_logger = CSVLogger(os.path.join(tb_dir, args.model + '_logger.csv'))
 
-    callbacks = [model_checkpoint, tensor_board, lr_scheduler]
+    callbacks = [model_checkpoint, tensor_board, lr_scheduler, csv_logger]
 
     # optimizer
     if args.optimizer == 'sgd':
@@ -98,7 +99,8 @@ if __name__ == "__main__":
             callbacks = [model_checkpoint, tensor_board, reduce_lr]
 
     cifar_gen, cifar_test_gen = get_cifar_gen()
-    model.fit_generator(cifar_gen,
-                        epochs=epochs,
-                        validation_data=cifar_test_gen,
-                        callbacks=callbacks)
+    history = model.fit_generator(cifar_gen,
+                                  epochs=epochs,
+                                  validation_data=cifar_test_gen,
+                                  callbacks=callbacks)
+    save_train_images(history, tb_dir)
