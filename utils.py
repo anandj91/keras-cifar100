@@ -121,11 +121,11 @@ def save_train_images(history, save_path):
     plt.xlabel('epoch')
     plt.ylabel('Loss value')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.imsave(os.path.join(save_path, 'loss.png'))
+    plt.savefig(os.path.join(save_path, 'loss.png'))
 
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
     plt.xlabel('epoch')
     plt.ylabel('acc value')
     plt.legend(['train', 'test'], loc='upper left')
-    plt.imsave(os.path.join(save_path, 'acc.png'))
+    plt.savefig(os.path.join(save_path, 'acc.png'))

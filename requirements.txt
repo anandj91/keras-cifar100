@@ -2,3 +2,5 @@ tensorflow-gpu
 scipy
 graphviz
 pydot
+matplotlib
+numpy
