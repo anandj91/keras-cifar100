@@ -1,22 +1,27 @@
 from tensorflow.python.keras import layers
 from tensorflow.python.keras import Model
+from tensorflow.python.keras.regularizers import l2
 
 import sys
 sys.path.append("..")
 from params import *
 
 
-def vgg(input_shape=(img_size, img_size, channel)):
+def vgg(input_shape=(img_size, img_size, channel), weight_decay=1e-4, use_bias=False):
     main_input = layers.Input(input_shape, name='vgg16_bn')
 
     x = layers.Conv2D(64, (3, 3),
                       padding='same',
-                      name='block1_conv1')(main_input)
+                      name='block1_conv1',
+                      kernel_regularizer=l2(weight_decay),
+                      use_bias=use_bias)(main_input)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.Conv2D(64, (3, 3),
                       padding='same',
-                      name='block1_conv2')(x)
+                      name='block1_conv2',
+                      kernel_regularizer=l2(weight_decay),
+                      use_bias=use_bias)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
@@ -24,12 +29,16 @@ def vgg(input_shape=(img_size, img_size, channel)):
     # Block 2
     x = layers.Conv2D(128, (3, 3),
                       padding='same',
-                      name='block2_conv1')(x)
+                      name='block2_conv1',
+                      kernel_regularizer=l2(weight_decay),
+                      use_bias=use_bias)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.Conv2D(128, (3, 3),
                       padding='same',
-                      name='block2_conv2')(x)
+                      name='block2_conv2',
+                      kernel_regularizer=l2(weight_decay),
+                      use_bias=use_bias)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
@@ -37,17 +46,23 @@ def vgg(input_shape=(img_size, img_size, channel)):
     # Block 3
     x = layers.Conv2D(256, (3, 3),
                       padding='same',
-                      name='block3_conv1')(x)
+                      name='block3_conv1',
+                      kernel_regularizer=l2(weight_decay),
+                      use_bias=use_bias)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.Conv2D(256, (3, 3),
                       padding='same',
-                      name='block3_conv2')(x)
+                      name='block3_conv2',
+                      kernel_regularizer=l2(weight_decay),
+                      use_bias=use_bias)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.Conv2D(256, (3, 3),
                       padding='same',
-                      name='block3_conv3')(x)
+                      name='block3_conv3',
+                      kernel_regularizer=l2(weight_decay),
+                      use_bias=use_bias)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool')(x)
@@ -55,17 +70,23 @@ def vgg(input_shape=(img_size, img_size, channel)):
     # Block 4
     x = layers.Conv2D(512, (3, 3),
                       padding='same',
-                      name='block4_conv1')(x)
+                      name='block4_conv1',
+                      kernel_regularizer=l2(weight_decay),
+                      use_bias=use_bias)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.Conv2D(512, (3, 3),
                       padding='same',
-                      name='block4_conv2')(x)
+                      name='block4_conv2',
+                      kernel_regularizer=l2(weight_decay),
+                      use_bias=use_bias)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.Conv2D(512, (3, 3),
                       padding='same',
-                      name='block4_conv3')(x)
+                      name='block4_conv3',
+                      kernel_regularizer=l2(weight_decay),
+                      use_bias=use_bias)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool')(x)
