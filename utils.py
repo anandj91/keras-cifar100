@@ -81,7 +81,7 @@ def get_model(train_model):
         return vgg19()
     elif train_model == 'nin':
         return nin()
-    elif train_model == 'goolenet':
+    elif train_model == 'googlenet':
         return googlenet()
 
 
