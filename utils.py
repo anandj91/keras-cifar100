@@ -122,6 +122,7 @@ def save_train_images(history, save_path):
     plt.ylabel('Loss value')
     plt.legend(['train', 'test'], loc='upper left')
     plt.savefig(os.path.join(save_path, 'loss.png'))
+    plt.close()
 
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
@@ -129,3 +130,4 @@ def save_train_images(history, save_path):
     plt.ylabel('acc value')
     plt.legend(['train', 'test'], loc='upper left')
     plt.savefig(os.path.join(save_path, 'acc.png'))
+    plt.close()
