@@ -23,6 +23,8 @@ def basic_block(input_tensor, filters, stride=1, weight_decay=5e-4):
     x = layers.BatchNormalization()(x)
 
     shortcut = input_tensor
+    # if stride != 1 then the w h of feature map is reduced
+    # if input_tensor.shape[-1] != filters * expansion then the dimension needed to be improved
     if stride != 1 or input_tensor.shape[-1] != filters * expansion:
         shortcut = layers.Conv2D(filters * expansion, (1, 1),
                                  strides=stride,
@@ -75,7 +77,6 @@ def bottleneck_block(input_tensor, filters, stride=1, weight_decay=5e-4):
 
 def resnet(block, num_block,
            input_shape=(img_size, img_size, channel),
-           num_classes=100,
            weight_decay=5e-4):
     main_input = layers.Input(input_shape)
 
@@ -86,9 +87,9 @@ def resnet(block, num_block,
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = make_layer(x, block, 64, num_block[0], 1)
-    x = make_layer(x, block, 128, num_block[0], 2)
-    x = make_layer(x, block, 256, num_block[0], 2)
-    x = make_layer(x, block, 512, num_block[0], 2)
+    x = make_layer(x, block, 128, num_block[1], 2)
+    x = make_layer(x, block, 256, num_block[2], 2)
+    x = make_layer(x, block, 512, num_block[3], 2)
     x = layers.GlobalAveragePooling2D()(x)
     x = layers.Dense(num_classes)(x)
 
