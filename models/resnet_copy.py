@@ -12,13 +12,13 @@ def basic_block(input_tensor, filters, stride=1, weight_decay=5e-4):
     x = layers.Conv2D(filters, (3, 3),
                       strides=stride,
                       padding='same',
-                      kernel_regularizer=l2(weight_decay),
+                      # kernel_regularizer=l2(weight_decay),
                       use_bias=False)(input_tensor)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.Conv2D(filters * expansion, (3, 3),
                       padding='same',
-                      kernel_regularizer=l2(weight_decay),
+                      # kernel_regularizer=l2(weight_decay),
                       use_bias=False)(x)
     x = layers.BatchNormalization()(x)
 
@@ -29,7 +29,7 @@ def basic_block(input_tensor, filters, stride=1, weight_decay=5e-4):
         shortcut = layers.Conv2D(filters * expansion, (1, 1),
                                  strides=stride,
                                  padding='valid',
-                                 kernel_regularizer=l2(weight_decay),
+                                 # kernel_regularizer=l2(weight_decay),
                                  use_bias=False)(input_tensor)
         shortcut = layers.BatchNormalization()(shortcut)
 
@@ -43,20 +43,20 @@ def bottleneck_block(input_tensor, filters, stride=1, weight_decay=5e-4):
     expansion = 4
     x = layers.Conv2D(filters, (1, 1),
                       padding='valid',
-                      kernel_regularizer=l2(weight_decay),
+                      # kernel_regularizer=l2(weight_decay),
                       use_bias=False)(input_tensor)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.Conv2D(filters, (3, 3),
                       strides=stride,
                       padding='same',
-                      kernel_regularizer=l2(weight_decay),
+                      # kernel_regularizer=l2(weight_decay),
                       use_bias=False)(x)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
     x = layers.Conv2D(filters * expansion, (1, 1),
                       padding='valid',
-                      kernel_regularizer=l2(weight_decay),
+                      # kernel_regularizer=l2(weight_decay),
                       use_bias=False)(x)
     x = layers.BatchNormalization()(x)
 
@@ -65,7 +65,7 @@ def bottleneck_block(input_tensor, filters, stride=1, weight_decay=5e-4):
         shortcut = layers.Conv2D(filters * expansion, (1, 1),
                                  strides=stride,
                                  padding='valid',
-                                 kernel_regularizer=l2(weight_decay),
+                                 # kernel_regularizer=l2(weight_decay),
                                  use_bias=False)(input_tensor)
         shortcut = layers.BatchNormalization()(shortcut)
 
@@ -82,7 +82,7 @@ def resnet(block, num_block,
 
     x = layers.Conv2D(64, (3, 3),
                       padding='same',
-                      kernel_regularizer=l2(weight_decay),
+                      # kernel_regularizer=l2(weight_decay),
                       use_bias=False)(main_input)
     x = layers.BatchNormalization()(x)
     x = layers.Activation('relu')(x)
