@@ -134,5 +134,5 @@ def resnet152():
 
 
 if __name__ == '__main__':
-    model = resnet18()
+    model = resnet34()
     model.summary()

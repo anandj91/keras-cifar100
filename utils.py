@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 
 from params import *
-# from models.resnet import resnet50, resnet101, resnet152
-from models.resnet_copy import resnet18, resnet34, resnet50, resnet101, resnet152
+from models import resnet
+from models import resnet_copy
 from models.vgg import vgg11, vgg13, vgg16, vgg19
 from models.nin import nin
 from models.inception import googlenet
@@ -68,16 +68,25 @@ def get_cifar_gen():
 def get_model(train_model):
 
     if train_model == 'resnet18':
-        # return resnet50()
-        return resnet18()
+        return resnet.resnet18()
     elif train_model == 'resnet34':
-        return resnet34()
+        return resnet.resnet34()
     elif train_model == 'resnet50':
-        return resnet50()
+        return resnet.resnet50()
     elif train_model == 'resnet101':
-        return resnet101()
+        return resnet.resnet101()
     elif train_model == 'resnet152':
-        return resnet152()
+        return resnet.resnet152()
+    elif train_model == 'resnet18_copy':
+        return resnet_copy.resnet18()
+    elif train_model == 'resnet34_copy':
+        return resnet_copy.resnet34()
+    elif train_model == 'resnet50_copy':
+        return resnet_copy.resnet50()
+    elif train_model == 'resnet101_copy':
+        return resnet_copy.resnet101()
+    elif train_model == 'resnet152':
+        return resnet_copy.resnet152()
     elif train_model == 'vgg11':
         return vgg11()
     elif train_model == 'vgg13':
