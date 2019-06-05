@@ -99,7 +99,7 @@ def resnet(block, num_block,
     x = make_layer(x, block, 256, num_block[2], 2)
     x = make_layer(x, block, 512, num_block[3], 2)
     x = layers.GlobalAveragePooling2D()(x)
-    x = layers.Dense(num_classes)(x)
+    x = layers.Dense(num_classes, activation='softmax')(x)
 
     return Model(main_input, x)
 
