@@ -40,24 +40,25 @@ if __name__ == "__main__":
 
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 
-    if not os.path.exists('experiments/' + args.model):
-        os.makedirs(os.path.join('experiments', args.model, 'logs'))
-        os.makedirs(os.path.join('experiments', args.model, 'checkpoints'))
+    model_path = os.path.join(base_path, 'experiments', args.model)
+    if not os.path.exists(model_path):
+        os.makedirs(os.path.join(model_path, 'logs'))
+        os.makedirs(os.path.join(model_path, 'checkpoints'))
 
     model = get_model(args.model)
-    plot_model(model, to_file=os.path.join('experiments', args.model, args.model + '.png'), show_shapes=True)
+    plot_model(model, to_file=os.path.join(model_path, args.model + '.png'), show_shapes=True)
 
     # callbacks
     # checkpoint callback
-    model_names = os.path.join('experiments', args.model, 'checkpoints',
-                               cur_time + '.model.{epoch:03d}-{val_loss:.4f}.hdf5')
-    model_checkpoint = ModelCheckpoint(model_names, monitor='val_loss', mode='min',
+    model_names = os.path.join(model_path, 'checkpoints',
+                               cur_time + '.model.{epoch:03d}-{val_acc:.4f}.hdf5')
+    model_checkpoint = ModelCheckpoint(model_names, monitor='val_acc', mode='max',
                                        verbose=1, save_best_only=True, 
                                        save_weights_only=False)
     # lr callback
     lr_scheduler = LearningRateScheduler(find_lr, verbose=1)
     # tensor board callback
-    tb_dir = os.path.join('experiments', args.model, 'logs', cur_time)
+    tb_dir = os.path.join(model_path, 'logs', cur_time)
     os.makedirs(tb_dir)
     tensor_board = TensorBoard(log_dir=tb_dir,
                                histogram_freq=0, write_graph=True, write_images=True)
@@ -78,13 +79,13 @@ if __name__ == "__main__":
         early_stop = EarlyStopping('val_loss', patience=patience)
         callbacks.append(early_stop)
     if args.checkpoint is not None:  # train from a checkpoint
-        model = load_model(os.path.join('experiments', args.model, 'checkpoints', args.checkpoint))
+        model = load_model(os.path.join(model_path, 'checkpoints', args.checkpoint))
         reduce_lr = ReduceLROnPlateau('val_loss', factor=0.5, patience=int(patience / 2), verbose=1)
         callbacks.append(reduce_lr)
     if args.continue_train:
         cpt = get_best_checkpoint(args.model)
         if cpt:
-            model = load_model(os.path.join('experiments', args.model, 'checkpoints', cpt))
+            model = load_model(os.path.join(model_path, 'checkpoints', cpt))
             if lr != args.lr:
                 cur_lr = args.lr
             else:
