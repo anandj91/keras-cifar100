@@ -1,6 +1,7 @@
-from tensorflow.python.keras import layers
-from tensorflow.python.keras import Model
-from tensorflow.python.keras.regularizers import l2
+import keras
+from keras import layers
+from keras import Model
+from keras.regularizers import l2
 
 import sys
 sys.path.append("..")

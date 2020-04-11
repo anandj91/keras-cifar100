@@ -1,5 +1,6 @@
-from tensorflow.python.keras import layers
-from tensorflow.python.keras import Model
+import keras
+from keras import layers
+from keras import Model
 
 import sys
 sys.path.append("..")

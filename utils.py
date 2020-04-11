@@ -1,8 +1,12 @@
 import os
-import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
-from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
+
+import plaidml
+import plaidml.keras
+plaidml.keras.install_backend()
+import keras
+from keras.preprocessing.image import ImageDataGenerator
 
 from params import *
 from models import resnet
@@ -36,7 +40,7 @@ def pre_processing(train_images, test_images):
 
 def get_cifar_gen():
     # get dataset
-    (x_train, y_train), (x_test, y_test) = tf.keras.datasets.cifar100.load_data(
+    (x_train, y_train), (x_test, y_test) = keras.datasets.cifar100.load_data(
         label_mode='fine')
 
     x_train = x_train.astype('float32')
@@ -44,8 +48,8 @@ def get_cifar_gen():
     x_train /= 255.
     x_test /= 255.
 
-    y_train = tf.keras.utils.to_categorical(y_train)
-    y_test = tf.keras.utils.to_categorical(y_test)
+    y_train = keras.utils.to_categorical(y_train)
+    y_test = keras.utils.to_categorical(y_test)
 
     print('x_train shape:', x_train.shape)
     print('y_train shape:', y_train.shape)

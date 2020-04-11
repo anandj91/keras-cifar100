@@ -2,11 +2,15 @@ import os
 import time
 import argparse
 
-from tensorflow.python.keras.models import load_model
-from tensorflow.python.keras.utils import plot_model
-from tensorflow.python.keras.optimizers import SGD, Adam
-from tensorflow.python.keras.callbacks import ModelCheckpoint, \
-    TensorBoard, LearningRateScheduler, EarlyStopping, ReduceLROnPlateau, CSVLogger
+import plaidml
+import plaidml.keras
+plaidml.keras.install_backend()
+import keras
+from keras.models import load_model
+#from tensorflow.python.keras.utils import plot_model
+from keras.optimizers import SGD, Adam
+from keras.callbacks import ModelCheckpoint, \
+    LearningRateScheduler, EarlyStopping, ReduceLROnPlateau, CSVLogger
 
 
 from utils import get_model, get_cifar_gen, find_lr, get_best_checkpoint, save_train_images
@@ -46,7 +50,7 @@ if __name__ == "__main__":
         os.makedirs(os.path.join(model_path, 'checkpoints'))
 
     model = get_model(args.model)
-    plot_model(model, to_file=os.path.join(model_path, args.model + '.png'), show_shapes=True)
+    #plot_model(model, to_file=os.path.join(model_path, args.model + '.png'), show_shapes=True)
 
     # callbacks
     # checkpoint callback
@@ -60,11 +64,9 @@ if __name__ == "__main__":
     # tensor board callback
     tb_dir = os.path.join(model_path, 'logs', cur_time)
     os.makedirs(tb_dir)
-    tensor_board = TensorBoard(log_dir=tb_dir,
-                               histogram_freq=0, write_graph=True, write_images=True)
     csv_logger = CSVLogger(os.path.join(tb_dir, args.model + '_logger.csv'))
 
-    callbacks = [model_checkpoint, tensor_board, lr_scheduler, csv_logger]
+    callbacks = [model_checkpoint, lr_scheduler, csv_logger]
 
     # optimizer
     if args.optimizer == 'sgd':
@@ -97,7 +99,7 @@ if __name__ == "__main__":
             model.compile(optimizer=optimizer, metrics=['accuracy'],
                           loss='categorical_crossentropy')
             reduce_lr = ReduceLROnPlateau('val_loss', factor=0.5, patience=int(patience / 2), verbose=1)
-            callbacks = [model_checkpoint, tensor_board, reduce_lr]
+            callbacks = [model_checkpoint, reduce_lr]
 
     cifar_gen, cifar_test_gen = get_cifar_gen()
     history = model.fit_generator(cifar_gen,
